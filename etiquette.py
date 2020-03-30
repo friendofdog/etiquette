@@ -1,6 +1,4 @@
-import random
 import time
-import sys
 
 cycle_duration = int(input("Enter cycle duration: ")) #20
 cycle_count = int(input("Enter number of cycles to run: ")) #10
@@ -11,14 +9,11 @@ total_duration = cycle_duration * cycle_count + 1
 queued = 0
 
 def print_stalls():
-#     print("\n".join([ str(stall) for stall in stalls ]))
     for stall in stalls:
         icon = 'x' if stall['time'] > 0 else 'o'
-    #     sys.stdout.write(f'|{icon}|')
-    # sys.stdout.flush()
-
         print(f'|{icon}|', end = '')
-    print('\n')
+
+    print('\r')
 
 def find_occupied():
     occupied = []
@@ -35,9 +30,7 @@ def set_exposure():
     for i, stall in enumerate(stalls):
         exposure = 0
         if i > 0: exposure += stalls[i-1]['threat']
-#         if i > 0: exposure += stalls[i-2]['threat'] / 2
         if i+1 <= len(stalls)-1: exposure += stalls[i+1]['threat']
-#         if i+2 <= len(stalls)-1: exposure += stalls[i+2]['threat'] / 2
         stall['exposure'] = exposure
 
 def add_occupant():
@@ -47,10 +40,8 @@ def add_occupant():
         if len(exclude) % 2 == 0:
             vacant.reverse()
         return sorted(vacant, key=lambda k: k['exposure'], reverse=False)[0]
-    exclude = find_occupied()
     lowest_exposure = assess_exposure()
     lowest_exposure['time'] = cycle_duration
-#     incoming = choice([i for i in range(0, stall_count) if i not in exclude])
 
 def set_time():
     for i, stall in enumerate(stalls):
@@ -64,7 +55,6 @@ def process_cycle():
     print_stalls()
 
 for cycle in range(total_duration):
-#     print('Seconds elapsed:', cycle)
     set_time()
     occupied = len(find_occupied())
     proceed = False
@@ -73,8 +63,6 @@ for cycle in range(total_duration):
         proceed = False
         if cycle%cycle_interval == 0:
             queued += 1
-#         print('Fully occupied')
-#         print('Queued', queued, '\n')
         continue
 
     if cycle%cycle_interval == 0 or queued > 0:
@@ -82,5 +70,3 @@ for cycle in range(total_duration):
         if queued > 0:
             queued -= 1
         time.sleep(1/5)
-
-#     print('Queued', queued, '\n')
