@@ -10,6 +10,9 @@ class Stall():
         return f"[{self.position}] exposure: {self.exposure}, time: {self.time}"
 
     def set_exposure(self):
+        def threat(neighbour):
+            return neighbour.time * (100 / cycle_duration)
+
         i = self.position
         exposure = 0
         if i > 0:
@@ -18,44 +21,39 @@ class Stall():
             exposure += threat(stalls[i+1])
         self.exposure = exposure
 
-def threat(neighbour):
-    return neighbour.time * (100/cycle_duration)
+    def set_time(self):
+        time = int(self.time)
+        if time > 0:
+            self.time = time - 1
+        return self.time
 
-def print_stalls():
-    for stall in stalls:
-        icon = 'x' if stall.time > 0 else 'o'
-        print(f'|{icon}|', end = '')
-
-    print('\r')
-
-def find_occupied():
+def get_occupancy():
     occupied = []
     for i, stall in enumerate(stalls):
-        if stall.time > 0:
+        time = int(stall.set_time())
+        if time > 0:
             occupied.append(i)
     return occupied
 
-def process_stalls():
-    for stall in stalls:
-        stall.set_exposure()
-
-def add_occupant():
-    def assess_exposure():
-        exclude = find_occupied()
-        vacant = [i for j, i in enumerate(stalls) if j not in exclude]
-        if len(exclude) % 2 == 0:
+def process_cycle(occupied):
+    def add_occupant(occupied):
+        vacant = [i for j, i in enumerate(stalls) if j not in occupied]
+        if len(occupied) % 2 == 0:
             vacant.reverse()
-        return sorted(vacant, key=lambda stall: stall.exposure, reverse=False)[0]
-    lowest_exposure = assess_exposure()
-    lowest_exposure.time = cycle_duration
+        lowest_exposure = sorted(vacant, key=lambda stall: stall.exposure, reverse=False)[0]
+        lowest_exposure.time = cycle_duration
 
-def set_time():
-    for i, stall in enumerate(stalls):
-        time = int(stall.time)
-        stall.time = time-1 if time > 0 else 0
+    def process_stalls():
+        for stall in stalls:
+            stall.set_exposure()
 
-def process_cycle():
-    add_occupant()
+    def print_stalls():
+        for stall in stalls:
+            icon = 'x' if stall.time > 0 else 'o'
+            print(f'|{icon}|', end='')
+        print('\r')
+
+    add_occupant(occupied)
     process_stalls()
     print_stalls()
 
@@ -69,18 +67,15 @@ queued = 0
 stalls = [Stall(stall) for stall in range(stall_count)]
 
 for cycle in range(total_duration):
-    set_time()
-    occupied = len(find_occupied())
-    proceed = False
+    occupied = get_occupancy()
 
-    if occupied >= stall_count:
-        proceed = False
+    if len(occupied) >= stall_count:
         if cycle%cycle_interval == 0:
             queued += 1
         continue
 
     if cycle%cycle_interval == 0 or queued > 0:
-        process_cycle()
+        process_cycle(occupied)
         if queued > 0:
             queued -= 1
         time.sleep(1/5)
