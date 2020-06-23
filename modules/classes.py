@@ -11,7 +11,8 @@ class Stall:
         self.time = 0
 
     def __str__(self):
-        return f"[{self.position}] exposure: {self.exposure}, time: {self.time}"
+        return \
+            f"[{self.position}] exposure: {self.exposure}, time: {self.time}"
 
     def set_exposure(self, cycle_duration, stalls):
         def threat(neighbour):

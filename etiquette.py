@@ -15,7 +15,9 @@ def process_cycle(occupied, cycle_duration, stalls):
         vacant = [i for j, i in enumerate(stalls) if j not in occupied]
         if len(occupied) % 2 == 0:
             vacant.reverse()
-        lowest_exposure = sorted(vacant, key=lambda stall: stall.exposure, reverse=False)[0]
+        lowest_exposure = sorted(
+            vacant, key=lambda stall: stall.exposure, reverse=False
+        )[0]
         lowest_exposure.time = cycle_duration
 
     def process_stalls():
