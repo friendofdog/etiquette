@@ -1,3 +1,12 @@
+class UrinalSession:
+    def __init__(self):
+        self.cycle_duration = int(input("Enter cycle duration: "))
+        self.cycle_count = int(input("Enter number of cycles to run: "))
+        self.cycle_interval = int(input("Enter interval between cycles: "))
+        self.stall_count = int(input("Enter number of stalls: "))
+        self.total_duration = self.cycle_duration * self.cycle_count + 1
+
+
 class StallRow:
     def __init__(self):
         self.queued = 0
