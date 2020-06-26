@@ -19,16 +19,7 @@ def print_stalls(st):
     print('\r')
 
 
-if __name__ == '__main__':
-    session = UrinalSession(
-        cd=int(input("Enter cycle duration: ")),
-        cc=int(input("Enter number of cycles to run: ")),
-        ci=int(input("Enter interval between cycles: ")),
-        sc=int(input("Enter number of stalls: "))
-    )
-    stall_row = StallRow()
-    stalls = [Stall(stall) for stall in range(session.stall_count)]
-
+def run_cycles(session, stall_row, stalls):
     for cycle in range(session.total_duration):
         interval = cycle % session.cycle_interval == 0
 
@@ -74,9 +65,6 @@ if __name__ == '__main__':
             """
             Determine which stall has the lowest exposure and assign it to the
             newcomer.
-            TODO: This is not actually working. Exposure is not being properly
-            calculated. The reverse bit might be throwing things off, in which
-            case it isn't so bad because that is just placeholder logic.
             """
             low_exp_stall = get_lowest_exposure(stall_row.occupancy, stalls)
             low_exp_stall.add_occupant(session.cycle_duration)
@@ -96,4 +84,19 @@ if __name__ == '__main__':
             Make the console output easier on the eyes before printing next
             change in occupancy.
             """
-            time.sleep(1/5)
+            time.sleep(1 / 5)
+
+def initialise():
+    session = UrinalSession(
+        cd=int(input("Enter cycle duration: ")),
+        cc=int(input("Enter number of cycles to run: ")),
+        ci=int(input("Enter interval between cycles: ")),
+        sc=int(input("Enter number of stalls: "))
+    )
+    stall_row = StallRow()
+    stalls_list = [Stall(stall) for stall in range(session.stall_count)]
+
+    run_cycles(session, stall_row, stalls_list)
+
+if __name__ == '__main__':
+    initialise()
