@@ -29,21 +29,18 @@ class StallRow:
 
 
 class Stall:
-    def __init__(self, stall):
-        self.position = stall
+    def __init__(self, position):
+        self.position = position
         self.exposure = 0
         self.time = 0
 
-    def set_exposure(self, cycle_duration, stalls):
-        def threat(neighbour):
-            return neighbour.time * (100 / cycle_duration)
-
+    def set_exposure(self, duration, stalls):
         i = self.position
         exposure = 0
         if i > 0:
-            exposure += threat(stalls[i-1])
+            exposure += stalls[i-1].time * (100 / duration)
         if i+1 <= len(stalls)-1:
-            exposure += threat(stalls[i+1])
+            exposure += stalls[i+1].time * (100 / duration)
         self.exposure = exposure
 
     def decrememt_time(self):
@@ -52,4 +49,8 @@ class Stall:
             self.time = time - 1
 
     def add_occupant(self, duration):
-        self.time = duration
+        if self.time == 0:
+            self.time = duration
+        else:
+            print('Error: add_occupant() attmped to populate non-vacant stall')
+            raise
