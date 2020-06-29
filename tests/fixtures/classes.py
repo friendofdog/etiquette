@@ -1,5 +1,5 @@
 import pytest
-from modules.classes import Stall
+from modules.classes import UrinalSession, StallRow, Stall
 
 
 @pytest.fixture
@@ -15,3 +15,15 @@ def set_times_stall_obj_list():
         for i, stall in enumerate(stalls):
             stall.time = times[i]
     return _set_times
+
+
+@pytest.fixture
+def mock_urinal_session_obj():
+    def _mock_urinal_session_obj(cd, cc, ci, sc):
+        return UrinalSession(cd, cc, ci, sc)
+    return _mock_urinal_session_obj
+
+
+@pytest.fixture
+def mock_stall_row_obj():
+    return StallRow()

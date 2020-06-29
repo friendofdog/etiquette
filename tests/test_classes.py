@@ -46,3 +46,49 @@ def test_add_occupant(time, time_new):
     stall.time = time
     stall.add_occupant(time_new)
     assert stall.time == time_new
+
+
+def test_update_occupancy(mock_stall_obj_list, set_times_stall_obj_list):
+    """
+    Test that stall row occupancy is being updated to reflect stalls with a
+    time of >0.
+    """
+    times = [2, 0, 3, 0, 4]
+    occupied = [0, 2, 4]
+    stalls = mock_stall_obj_list(len(times))
+    set_times_stall_obj_list(stalls, times)
+    stall_row = StallRow()
+    stall_row.update_occupancy(stalls)
+    assert stall_row.occupancy == occupied
+
+
+@pytest.mark.parametrize("occupancy, interval, queue_new", [
+    ([0, 1, 2, 3, 4], True, 1),
+    ([0, 1, 2], True, 0),
+    ([0, 1, 2, 3, 4], False, 0),
+    ([0, 1, 2], False, 0)
+])
+def test_incrememt_queue(occupancy, interval, queue_new):
+    """
+    Tests that stall row occupancy increases by 1 in there is an interval and
+    the row has not reached maximum occupancy. Testing all four conditions.
+    """
+    stall_count = 5
+    stall_row = StallRow()
+    stall_row.incrememt_queue(interval, occupancy, stall_count)
+    assert stall_row.queued == queue_new
+
+
+@pytest.mark.parametrize("queue, queue_new", [
+    (1, 0),
+    (0, 0)
+])
+def test_decrememt_queue(queue, queue_new):
+    """
+    Test that queued decreases by 1, if queue is already >0. Queued should
+    never be a negative value.
+    """
+    stall_row = StallRow()
+    stall_row.queued = queue
+    stall_row.decrememt_queue()
+    assert stall_row.queued == queue_new

@@ -19,8 +19,8 @@ class StallRow:
                 occupied.append(i)
         self.occupancy = occupied
 
-    def incrememt_queue(self, interval, occupancy, count):
-        if interval and len(occupancy) >= count:
+    def incrememt_queue(self, interval, occupancy, stall_count):
+        if interval and len(occupancy) >= stall_count:
             self.queued += 1
 
     def decrememt_queue(self):
