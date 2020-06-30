@@ -2,9 +2,9 @@ from modules.classes import UrinalSession, StallRow, Stall
 import time
 
 
-def get_lowest_exposure(occ, st):
-    vacant = [i for j, i in enumerate(st) if j not in occ]
-    if len(occ) % 2 == 0:
+def get_lowest_exposure(occupancy, stalls):
+    vacant = [i for j, i in enumerate(stalls) if j not in occupancy]
+    if len(occupancy) % 2 == 0:
         vacant.reverse()
     lowest_exposure = sorted(
         vacant, key=lambda stall: stall.exposure, reverse=False
@@ -94,9 +94,9 @@ def initialise():
         sc=int(input("Enter number of stalls: "))
     )
     stall_row = StallRow()
-    stalls_list = [Stall(stall) for stall in range(session.stall_count)]
+    stalls = [Stall(stall) for stall in range(session.stall_count)]
 
-    run_cycles(session, stall_row, stalls_list)
+    run_cycles(session, stall_row, stalls)
 
 if __name__ == '__main__':
     initialise()
