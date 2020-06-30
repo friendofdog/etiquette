@@ -10,7 +10,7 @@ def mock_stall_obj_list():
 
 
 @pytest.fixture
-def set_times_stall_obj_list():
+def mock_times_stall_obj_list():
     def _set_times(stalls, times):
         for i, stall in enumerate(stalls):
             stall.time = times[i]
@@ -22,8 +22,3 @@ def mock_urinal_session_obj():
     def _mock_urinal_session_obj(cd, cc, ci, sc):
         return UrinalSession(cd, cc, ci, sc)
     return _mock_urinal_session_obj
-
-
-@pytest.fixture
-def mock_stall_row_obj():
-    return StallRow()
